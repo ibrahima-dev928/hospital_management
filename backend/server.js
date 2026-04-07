@@ -69,6 +69,14 @@ app.get('/check-users', async (req, res) => {
   }
 });
 
+app.get('/test-password', async (req, res) => {
+  const bcrypt = require('bcryptjs');
+  const db = require('./models/db');
+  const [rows] = await db.query('SELECT password FROM users WHERE username = "admin"');
+  const valid = await bcrypt.compare('admin123', rows[0].password);
+  res.send(`Mot de passe valide : ${valid}`);
+});
+
 app.get('/test-db', async (req, res) => {
   const db = require('./models/db');
   try {
