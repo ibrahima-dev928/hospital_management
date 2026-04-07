@@ -1,0 +1,28 @@
+<%- include('../partials/header', { title: user ? 'Modifier utilisateur' : 'Ajouter utilisateur' ,
+  currentPath: '/admin/users' }) %>
+  <div class="card">
+    <form action="<%= user ? '/admin/users/update/'+user.id : '/admin/users' %>" method="POST">
+      <div class="form-row">
+        <input type="text" name="username" placeholder="Nom d'utilisateur" value="<%= user ? user.username : '' %>"
+          <%=user ? 'readonly' : 'required' %>>
+        <input type="email" name="email" placeholder="Email" value="<%= user ? user.email : '' %>" required>
+      </div>
+      <div class="form-row">
+        <input type="text" name="nom" placeholder="Nom" value="<%= user ? user.nom : '' %>" required>
+        <input type="text" name="prenom" placeholder="Prénom" value="<%= user ? user.prenom : '' %>" required>
+      </div>
+      <div class="form-row">
+        <select name="role" required>
+          <option value="patient" <%=user && user.role==='patient' ? 'selected' : '' %>>Patient</option>
+          <option value="medecin" <%=user && user.role==='medecin' ? 'selected' : '' %>>Médecin</option>
+          <option value="admin" <%=user && user.role==='admin' ? 'selected' : '' %>>Admin</option>
+        </select>
+        <% if (!user) { %>
+          <input type="password" name="password" placeholder="Mot de passe" required>
+          <% } %>
+      </div>
+      <button type="submit" class="btn-primary">Enregistrer</button>
+      <a href="/admin/users" class="btn-secondary">Annuler</a>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

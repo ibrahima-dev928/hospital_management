@@ -1,0 +1,40 @@
+<%- include('../partials/header', { title: 'Bâtiments' , currentPath: '/admin/batiments' }) %>
+  <div class="card">
+    <h2>🏢 Gestion des bâtiments</h2>
+    <a href="/admin/batiments/new" class="btn-primary">➕ Ajouter un bâtiment</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Actif</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% batiments.forEach(b=> { %>
+          <tr>
+            <td>
+              <%= b.id %>
+            </td>
+            <td>
+              <%= b.nom %>
+            </td>
+            <td>
+              <%= b.description || '-' %>
+            </td>
+            <td>
+              <%= b.actif ? '✅' : '❌' %>
+            </td>
+            <td>
+              <a href="/admin/batiments/edit/<%= b.id %>" class="btn-edit">✏️</a>
+              <a href="/admin/batiments/delete/<%= b.id %>" class="btn-danger"
+                onclick="return confirm('Supprimer ce bâtiment ?')">🗑️</a>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

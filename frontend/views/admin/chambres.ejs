@@ -1,0 +1,52 @@
+<%- include('../partials/header', { title: 'Chambres' , currentPath: '/admin/chambres' }) %>
+  <div class="card">
+    <h2>🛏️ Gestion des chambres</h2>
+    <a href="/admin/chambres/new" class="btn-primary">➕ Ajouter une chambre</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Bâtiment</th>
+          <th>Numéro</th>
+          <th>Type</th>
+          <th>Capacité</th>
+          <th>Disponible</th>
+          <th>Actif</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% chambres.forEach(c=> { %>
+          <tr>
+            <td>
+              <%= c.id %>
+            </td>
+            <td>
+              <%= c.batiment_nom %>
+            </td>
+            <td>
+              <%= c.numero %>
+            </td>
+            <td>
+              <%= c.type %>
+            </td>
+            <td>
+              <%= c.capacite %>
+            </td>
+            <td>
+              <%= c.disponible ? '✅' : '❌' %>
+            </td>
+            <td>
+              <%= c.actif ? '✅' : '❌' %>
+            </td>
+            <td>
+              <a href="/admin/chambres/edit/<%= c.id %>" class="btn-edit">✏️</a>
+              <a href="/admin/chambres/delete/<%= c.id %>" class="btn-danger"
+                onclick="return confirm('Supprimer cette chambre ?')">🗑️</a>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

@@ -1,0 +1,85 @@
+<%- include('../partials/header', { title: 'Espace médecin' , currentPath: '/medecin/dashboard' }) %>
+  <div class="content-header">
+    <h1>Tableau de bord médecin</h1>
+    <p>Bienvenue Dr. <%= user.prenom %>
+        <%= user.nom %>
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>🔔 Notifications (<%= notifs.length %> non lues)</h3>
+    <ul>
+      <% notifs.forEach(n=> { %>
+        <li>
+          <%= n.message %> <a href="/medecin/notif/read/<%= n.id %>">✅ Marquer lue</a>
+        </li>
+        <% }) %>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📋 Demandes en attente (<%= demandes.length %>)</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Date</th>
+          <th>Motif</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% demandes.forEach(d=> { %>
+          <tr>
+            <td>
+              <%= d.patient_nom %>
+            </td>
+            <td>
+              <%= new Date(d.date_rdv).toLocaleString('fr-FR') %>
+            </td>
+            <td>
+              <%= d.motif || '-' %>
+            </td>
+            <td>
+              <a href="/medecin/confirm-rdv/<%= d.id %>" class="btn-primary">✅ Confirmer</a>
+              <a href="/medecin/refuse-rdv/<%= d.id %>" class="btn-danger">❌ Refuser</a>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>✅ Rendez-vous confirmés (<%= confirmes.length %>)</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Date</th>
+          <th>Téléphone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% confirmes.forEach(c=> { %>
+          <tr>
+            <td>
+              <%= c.patient_nom %>
+            </td>
+            <td>
+              <%= new Date(c.date_rdv).toLocaleString('fr-FR') %>
+            </td>
+            <td>
+              <%= c.patient_tel || '-' %>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>⚙️ Gérer mes disponibilités</h3>
+    <a href="/medecin/disponibilites" class="btn-secondary">Modifier mes créneaux</a>
+  </div>
+  <%- include('../partials/footer') %>

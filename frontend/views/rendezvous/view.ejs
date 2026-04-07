@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: `Rendez-vous #${rdv.id}`, currentPath: '/rendezvous' }) %>
+  <div class="card">
+    <h2>📅 Détail du rendez-vous</h2>
+    <div class="detail-grid">
+      <p><strong>ID :</strong>
+        <%= rdv.id %>
+      </p>
+      <p><strong>Patient :</strong>
+        <a href="/patients/view/<%= patient.id %>">
+          <%= patient.prenom %>
+            <%= patient.nom %>
+        </a>
+      </p>
+      <p><strong>Médecin :</strong>
+        <a href="/medecins/view/<%= medecin.id %>">Dr. <%= medecin.prenom %>
+            <%= medecin.nom %></a>
+      </p>
+      <p><strong>Date & heure :</strong>
+        <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+      </p>
+      <p><strong>Statut :</strong>
+        <%= rdv.statut %>
+      </p>
+      <p><strong>Durée :</strong>
+        <%= rdv.duree || '30 minutes' %>
+      </p>
+      <p><strong>Notes :</strong>
+        <%= rdv.notes || 'Aucune' %>
+      </p>
+    </div>
+    <div class="action-buttons">
+      <a href="/rendezvous/edit/<%= rdv.id %>" class="btn-edit">✏️ Modifier</a>
+      <a href="/rendezvous" class="btn-secondary">← Retour à la liste</a>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>

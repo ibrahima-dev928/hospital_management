@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title: batiment ? 'Modifier' : 'Ajouter' + ' un bâtiment' ,
+  currentPath: '/admin/batiments' }) %>
+  <div class="card">
+    <form action="/admin/batiments<%= batiment ? '/update/' + batiment.id : '' %>" method="POST">
+      <div class="form-group">
+        <label>Nom</label>
+        <input type="text" name="nom" value="<%= batiment ? batiment.nom : '' %>" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="2"><%= batiment ? batiment.description : '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" name="actif" <%=batiment && batiment.actif ? 'checked' : '' %>> Actif</label>
+      </div>
+      <button type="submit" class="btn-primary">💾 Enregistrer</button>
+      <a href="/admin/batiments" class="btn-secondary">Annuler</a>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

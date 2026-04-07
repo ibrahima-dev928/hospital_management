@@ -1,0 +1,51 @@
+<%- include('../partials/header', { title: 'Mon dossier médical' , currentPath: '/patient/mon-dossier' }) %>
+  <div class="card">
+    <h2>📂 Mon dossier médical</h2>
+    <% if (!prescriptionsByMedecin || prescriptionsByMedecin.length===0) { %>
+      <p>Aucune prescription pour le moment. Consultez votre médecin.</p>
+      <% } else { %>
+        <% prescriptionsByMedecin.forEach(med=> { %>
+          <div class="card" style="margin-top:20px;">
+            <h3>👨‍⚕️ Dr. <%= med.medecin %>
+            </h3>
+            <% if (med.prescriptions.length===0) { %>
+              <p>Aucune prescription de ce médecin.</p>
+              <% } else { %>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Diagnostic / Contenu</th>
+                      <th>Médicaments</th>
+                      <th>Posologie</th>
+                      <th>Durée</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% med.prescriptions.forEach(p=> { %>
+                      <tr>
+                        <td>
+                          <%= new Date(p.date_prescription).toLocaleDateString() %>
+                        </td>
+                        <td>
+                          <%= p.contenu %>
+                        </td>
+                        <td>
+                          <%= p.medicaments || '-' %>
+                        </td>
+                        <td>
+                          <%= p.posologie || '-' %>
+                        </td>
+                        <td>
+                          <%= p.duree || '-' %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+                <% } %>
+          </div>
+          <% }) %>
+            <% } %>
+  </div>
+  <%- include('../partials/footer') %>

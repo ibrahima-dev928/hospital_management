@@ -1,0 +1,86 @@
+<%- include('../partials/header', { title: `Dossier médical - ${patient.prenom} ${patient.nom}`,
+  currentPath: '/medecin/patients' }) %>
+  <div class="card">
+    <h2>📂 Dossier médical de <%= patient.prenom %>
+        <%= patient.nom %>
+    </h2>
+    <p><strong>Patient depuis :</strong>
+      <%= new Date(patient.created_at).toLocaleDateString() %>
+    </p>
+
+    <!-- Boutons d'action (admission et facture) -->
+    <div class="action-buttons" style="margin-bottom: 20px;">
+      <a href="/medecin/admission/patient/<%= patient.id %>" class="btn-warning">🏥 Admettre à l'hôpital</a>
+      <a href="/medecin/facture/patient/<%= patient.id %>" class="btn-warning">🧾 Créer une facture</a>
+    </div>
+
+    <hr>
+    <h3>➕ Ajouter une prescription</h3>
+    <form action="/medecin/dossier/<%= patient.id %>/prescription" method="POST">
+      <div class="form-row">
+        <label>Date : <input type="date" name="date_prescription" value="<%= new Date().toISOString().slice(0,10) %>"
+            required></label>
+      </div>
+      <div class="form-group">
+        <label>Contenu / Diagnostic</label>
+        <textarea name="contenu" rows="3" required placeholder="Description du motif, diagnostic..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Médicaments</label>
+        <textarea name="medicaments" rows="2" placeholder="Liste des médicaments"></textarea>
+      </div>
+      <div class="form-row">
+        <input type="text" name="posologie" placeholder="Posologie (ex: 2x/jour)">
+        <input type="text" name="duree" placeholder="Durée (ex: 7 jours)">
+      </div>
+      <div class="form-group">
+        <label>Remarques supplémentaires</label>
+        <textarea name="remarques" rows="2"></textarea>
+      </div>
+      <button type="submit" class="btn-primary">📝 Enregistrer la prescription</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>📜 Historique des prescriptions</h3>
+    <% if (prescriptions.length===0) { %>
+      <p>Aucune prescription pour ce patient.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Contenu</th>
+              <th>Médicaments</th>
+              <th>Posologie</th>
+              <th>Durée</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% prescriptions.forEach(p=> { %>
+              <tr>
+                <td>
+                  <%= new Date(p.date_prescription).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= p.contenu %>
+                </td>
+                <td>
+                  <%= p.medicaments || '-' %>
+                </td>
+                <td>
+                  <%= p.posologie || '-' %>
+                </td>
+                <td>
+                  <%= p.duree || '-' %>
+                </td>
+                <td><a href="/medecin/prescription/delete/<%= p.id %>" class="btn-danger"
+                    onclick="return confirm('Supprimer cette prescription ?')">🗑️</a></td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+  </div>
+  <%- include('../partials/footer') %>

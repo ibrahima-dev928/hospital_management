@@ -1,0 +1,228 @@
+<%- include('partials/header', { title: 'Tableau de bord' , currentPath: '/' }) %>
+
+  <div class="content-header">
+    <h1>🏥 Tableau de bord</h1>
+    <p>Bienvenue, <%= user.prenom %>
+        <%= user.nom %> (<%= user.role %>)</p>
+  </div>
+
+  <% if (user.role==='patient' ) { %>
+    <!-- Statistiques patient -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">
+          <%= typeof totalRdvs !=='undefined' ? totalRdvs : 0 %>
+        </div>
+        <div class="stat-label">Total rendez-vous</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">
+          <%= upcomingRdvs ? upcomingRdvs.length : 0 %>
+        </div>
+        <div class="stat-label">Prochains rendez-vous</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">
+          <%= notifsCount || 0 %>
+        </div>
+        <div class="stat-label">Notifications non lues</div>
+      </div>
+    </div>
+
+    <!-- Prochains rendez-vous -->
+    <div class="card">
+      <h2>📅 Prochains rendez-vous</h2>
+      <% if (!upcomingRdvs || upcomingRdvs.length===0) { %>
+        <p>Aucun rendez-vous à venir.</p>
+        <% } else { %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Médecin</th>
+                <th>Spécialité</th>
+                <th>Statut</th>
+                <th>Motif</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% upcomingRdvs.forEach(rdv=> { %>
+                <tr>
+                  <td>
+                    <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+                  </td>
+                  <td>Dr. <%= rdv.medecin_nom || 'Médecin' %>
+                  </td>
+                  <td>
+                    <%= rdv.specialite || '-' %>
+                  </td>
+                  <td>
+                    <% if (rdv.statut==='confirmé' ) { %><span style="color:green;">✅ Confirmé</span>
+                      <% } else if (rdv.statut==='refusé' ) { %><span style="color:red;">❌ Refusé</span>
+                        <% } else { %><span style="color:orange;">⏳ En attente</span>
+                          <% } %>
+                  </td>
+                  <td>
+                    <%= rdv.motif || '-' %>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+          <% } %>
+            <a href="/patient/rdv" class="btn-info">Voir tous mes rendez-vous</a>
+    </div>
+
+    <!-- Dernières notifications -->
+    <div class="card">
+      <h2>🔔 Dernières notifications</h2>
+      <% if (!notifs || notifs.length===0) { %>
+        <p>Aucune notification récente.</p>
+        <% } else { %>
+          <ul>
+            <% notifs.forEach(n=> { %>
+              <li>
+                <%= n.message %> – <small>
+                    <%= new Date(n.created_at).toLocaleString() %>
+                  </small>
+                  <% if (n.lien) { %> <a href="<%= n.lien %>">Voir</a>
+                    <% } %>
+              </li>
+              <% }) %>
+          </ul>
+          <% } %>
+            <a href="/patient/notifications" class="btn-secondary">Toutes les notifications</a>
+    </div>
+
+    <div class="features">
+      <a href="/patient/prendre-rdv" class="feature">➕ Prendre rendez-vous</a>
+      <a href="/patient/rdv" class="feature">📅 Mes rendez-vous</a>
+    </div>
+
+    <% } else if (user.role==='medecin' ) { %>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">
+            <%= demandesEnAttente ? demandesEnAttente.length : 0 %>
+          </div>
+          <div class="stat-label">Demandes en attente</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">
+            <%= rdvsConfirmes ? rdvsConfirmes.length : 0 %>
+          </div>
+          <div class="stat-label">RDV confirmés à venir</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">
+            <%= notifsCount || 0 %>
+          </div>
+          <div class="stat-label">Notifications non lues</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 Demandes en attente</h2>
+        <% if (!demandesEnAttente || demandesEnAttente.length===0) { %>
+          <p>Aucune demande.</p>
+          <% } else { %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Date</th>
+                  <th>Motif</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% demandesEnAttente.forEach(d=> { %>
+                  <tr>
+                    <td>
+                      <%= d.patient_nom %>
+                    </td>
+                    <td>
+                      <%= new Date(d.date_rdv).toLocaleString('fr-FR') %>
+                    </td>
+                    <td>
+                      <%= d.motif || '-' %>
+                    </td>
+                    <td>
+                      <a href="/medecin/confirm-rdv/<%= d.id %>" class="btn-primary">✅ Confirmer</a>
+                      <a href="/medecin/refuse-rdv/<%= d.id %>" class="btn-danger">❌ Refuser</a>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+            <% } %>
+      </div>
+
+      <div class="card">
+        <h2>✅ Rendez-vous confirmés</h2>
+        <% if (!rdvsConfirmes || rdvsConfirmes.length===0) { %>
+          <p>Aucun.</p>
+          <% } else { %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Date</th>
+                  <th>Téléphone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% rdvsConfirmes.forEach(c=> { %>
+                  <tr>
+                    <td>
+                      <%= c.patient_nom %>
+                    </td>
+                    <td>
+                      <%= new Date(c.date_rdv).toLocaleString('fr-FR') %>
+                    </td>
+                    <td>
+                      <%= c.patient_tel || '-' %>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+            <% } %>
+      </div>
+
+      <div class="features">
+        <a href="/medecin/disponibilites" class="feature">⏰ Gérer mes disponibilités</a>
+        <a href="/rendezvous" class="feature">📅 Tous les RDV</a>
+      </div>
+
+      <% } else if (user.role==='admin' ) { %>
+        <!-- Dashboard admin enrichi -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">
+              <%= totalPatients || 0 %>
+            </div>
+            <div class="stat-label">Patients</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">
+              <%= totalMedecins || 0 %>
+            </div>
+            <div class="stat-label">Médecins</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">
+              <%= totalRdvs || 0 %>
+            </div>
+            <div class="stat-label">Rendez-vous</div>
+          </div>
+        </div>
+
+        <div class="features">
+          <a href="/patients" class="feature">👥 Gestion des patients</a>
+          <a href="/medecins" class="feature">👨‍⚕️ Gestion des médecins</a>
+          <a href="/rendezvous" class="feature">📅 Gestion des rendez-vous</a>
+        </div>
+        <% } %>
+
+          <%- include('partials/footer') %>

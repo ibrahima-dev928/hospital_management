@@ -1,0 +1,93 @@
+<%- include('../partials/header', { title: 'Rendez-vous' , currentPath: '/rendezvous' }) %>
+  <% if (locals.success) { %>
+    <div class="success">
+      <%= success %>
+    </div>
+    <% } %>
+
+      <div class="card">
+        <h2>➕ Prendre un rendez-vous</h2>
+        <form action="/rendezvous" method="POST">
+          <div class="form-row">
+            <select name="patient_id" required>
+              <option value="">Sélectionner un patient</option>
+              <% patients.forEach(p=> { %>
+                <option value="<%= p.id %>">
+                  <%= p.prenom %>
+                    <%= p.nom %>
+                </option>
+                <% }) %>
+            </select>
+            <select name="medecin_id" required>
+              <option value="">Sélectionner un médecin</option>
+              <% medecins.forEach(m=> { %>
+                <option value="<%= m.id %>">Dr. <%= m.prenom %>
+                    <%= m.nom %> - <%= m.specialite %>
+                </option>
+                <% }) %>
+            </select>
+          </div>
+          <div class="form-row">
+            <input type="date" name="date_rdv" required>
+            <input type="time" name="heure_rdv" required>
+            <select name="statut">
+              <option value="En attente">En attente</option>
+              <option value="Confirmé">Confirmé</option>
+              <option value="Annulé">Annulé</option>
+            </select>
+            <select name="duree">
+              <option value="30 minutes">30 min</option>
+              <option value="1 heure">1 heure</option>
+              <option value="1 heure 30">1h30</option>
+            </select>
+          </div>
+          <textarea name="notes" placeholder="Notes (optionnel)"></textarea>
+          <button type="submit" class="btn-primary">📅 Ajouter</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>📋 Liste des rendez-vous (<%= rendezvous.length %>)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Patient</th>
+              <th>Médecin</th>
+              <th>Date & Heure</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rendezvous.forEach(rdv=> {
+              const patient = patients.find(p => p.id === rdv.patient_id);
+              const medecin = medecins.find(m => m.id === rdv.medecin_id);
+              %>
+              <tr>
+                <td>#<%= rdv.id %>
+                </td>
+                <td>
+                  <%= patient ? `${patient.prenom} ${patient.nom}` : '?' %>
+                </td>
+                <td>
+                  <%= medecin ? `Dr. ${medecin.prenom} ${medecin.nom}` : '?' %>
+                </td>
+                <td>
+                  <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+                </td>
+                <td>
+                  <%= rdv.statut %>
+                </td>
+                <td>
+                  <a href="/rendezvous/view/<%= rdv.id %>" class="btn-info">👁️</a>
+                  <a href="/rendezvous/edit/<%= rdv.id %>" class="btn-edit">✏️</a>
+                  <a href="/rendezvous/delete/<%= rdv.id %>" class="btn-danger"
+                    onclick="return confirm('Supprimer ce rendez-vous ?')">🗑️</a>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <%- include('../partials/footer') %>

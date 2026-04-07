@@ -1,0 +1,31 @@
+<%- include('../partials/header', { title: 'Mes patients' , currentPath: '/medecin/patients' }) %>
+  <div class="card">
+    <h2>📋 Mes patients</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% patients.forEach(p=> { %>
+          <tr>
+            <td>
+              <%= p.nom %>
+            </td>
+            <td>
+              <%= p.prenom %>
+            </td>
+            <td>
+              <%= p.email || '-' %>
+            </td>
+            <td><a href="/medecin/dossier/<%= p.id %>" class="btn-info">📂 Dossier médical</a></td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

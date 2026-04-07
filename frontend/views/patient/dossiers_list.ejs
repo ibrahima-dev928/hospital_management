@@ -1,0 +1,26 @@
+<%- include('../partials/header', { title: 'Mes dossiers médicaux' , currentPath: '/patient/dossiers' }) %>
+  <div class="card">
+    <h2>📄 Mes dossiers médicaux</h2>
+    <% if (dossiers.length===0) { %>
+      <p>Vous n'avez aucun dossier médical pour le moment.</p>
+      <% } else { %>
+        <div class="dossiers-grid">
+          <% dossiers.forEach(d=> { %>
+            <div class="card dossier-card">
+              <h3>
+                <%= d.titre %>
+              </h3>
+              <p><strong>Médecin :</strong> Dr. <%= d.medecin_nom %> (<%= d.specialite %>)</p>
+              <p><strong>Date :</strong>
+                <%= new Date(d.created_at).toLocaleDateString() %>
+              </p>
+              <p>
+                <%= d.description ? d.description.substring(0, 100) + '...' : '' %>
+              </p>
+              <a href="/patient/dossiers/<%= d.id %>" class="btn-info">👁️ Voir le dossier</a>
+            </div>
+            <% }) %>
+        </div>
+        <% } %>
+  </div>
+  <%- include('../partials/footer') %>

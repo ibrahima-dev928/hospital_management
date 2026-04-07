@@ -1,0 +1,77 @@
+<%- include('partials/header', { title: `Facture ${facture.numero_facture}`, currentPath: '/patient/factures' }) %>
+  <div class="card">
+    <h2>🧾 Facture n° <%= facture.numero_facture %>
+    </h2>
+    <p><strong>Patient :</strong>
+      <%= patient.prenom %>
+        <%= patient.nom %>
+    </p>
+    <p><strong>Date d'émission :</strong>
+      <%= new Date(facture.date_emission).toLocaleString() %>
+    </p>
+    <p><strong>Échéance :</strong>
+      <%= new Date(facture.date_echeance).toLocaleDateString() %>
+    </p>
+    <p><strong>Statut :</strong>
+      <%= facture.statut %>
+    </p>
+
+    <h3>Détail des prestations</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Qté</th>
+          <th>Prix unitaire</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lignes.forEach(l=> { %>
+          <tr>
+            <td>
+              <%= l.description %>
+            </td>
+            <td>
+              <%= l.quantite %>
+            </td>
+            <td>
+              <%= Number(l.prix_unitaire).toFixed(2) %> FCFA
+            </td>
+            <td>
+              <%= Number(l.total_ligne).toFixed(2) %> FCFA
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="3">Total HT</th>
+          <td>
+            <%= Number(facture.total_ht).toFixed(2) %> fcfa
+          </td>
+        </tr>
+        <tr>
+          <th colspan="3">TVA 20%</th>
+          <td>
+            <%= Number(facture.tva).toFixed(2) %> fcfa
+          </td>
+        </tr>
+        <tr>
+          <th colspan="3">Total TTC</th>
+          <td><strong>
+              <%= Number(facture.total_ttc).toFixed(2) %> fcfa
+            </strong></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="action-buttons">
+      <a href="/patient/factures" class="btn-secondary">← Retour</a>
+      <% if (facture.statut==='impayee' ) { %>
+        <a href="/patient/facture/payer/<%= facture.id %>" class="btn-primary"
+          onclick="return confirm('Confirmer le paiement ?')">💳 Payer maintenant</a>
+        <% } %>
+    </div>
+  </div>
+  <%- include('partials/footer') %>

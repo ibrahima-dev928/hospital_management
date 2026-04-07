@@ -1,0 +1,71 @@
+<%- include('../partials/header', { title: 'Mes hospitalisations' , currentPath: '/patient/admissions' }) %>
+  <div class="card">
+    <h2>Hospitalisation en cours</h2>
+    <% if (active.length===0) { %>
+      <p>Aucune hospitalisation en cours.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Admis le</th>
+              <th>Médecin</th>
+              <th>Chambre</th>
+              <th>Motif</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% active.forEach(a=> { %>
+              <tr>
+                <td>
+                  <%= new Date(a.date_admission).toLocaleString() %>
+                </td>
+                <td>Dr. <%= a.medecin_prenom %>
+                    <%= a.medecin_nom %>
+                </td>
+                <td>Bâtiment <%= a.batiment_nom %> - Chambre <%= a.numero %>
+                </td>
+                <td>
+                  <%= a.motif %>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+  </div>
+  <div class="card">
+    <h2>Historique des séjours</h2>
+    <% if (historique.length===0) { %>
+      <p>Aucun séjour antérieur.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Admission</th>
+              <th>Sortie</th>
+              <th>Médecin</th>
+              <th>Motif</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% historique.forEach(h=> { %>
+              <tr>
+                <td>
+                  <%= new Date(h.date_admission).toLocaleString() %>
+                </td>
+                <td>
+                  <%= new Date(h.date_sortie).toLocaleString() %>
+                </td>
+                <td>Dr. <%= h.medecin_prenom %>
+                    <%= h.medecin_nom %>
+                </td>
+                <td>
+                  <%= h.motif %>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+  </div>
+  <%- include('../partials/footer') %>

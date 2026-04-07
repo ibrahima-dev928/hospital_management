@@ -1,0 +1,39 @@
+<%- include('../partials/header', { title: `Modifier RDV #${rdv.id}`, currentPath: '/rendezvous' }) %>
+  <div class="card">
+    <form action="/rendezvous/update/<%= rdv.id %>" method="POST">
+      <div class="form-row">
+        <select name="patient_id" required>
+          <% patients.forEach(p=> { %>
+            <option value="<%= p.id %>" <%=rdv.patient_id===p.id ? 'selected' : '' %>><%= p.prenom %>
+                <%= p.nom %>
+            </option>
+            <% }) %>
+        </select>
+        <select name="medecin_id" required>
+          <% medecins.forEach(m=> { %>
+            <option value="<%= m.id %>" <%=rdv.medecin_id===m.id ? 'selected' : '' %>>Dr. <%= m.prenom %>
+                <%= m.nom %> - <%= m.specialite %>
+            </option>
+            <% }) %>
+        </select>
+      </div>
+      <div class="form-row">
+        <input type="date" name="date_rdv" value="<%= rdv.date_rdv.toISOString().substr(0,10) %>" required>
+        <input type="time" name="heure_rdv" value="<%= rdv.heure_rdv %>" required>
+        <select name="statut">
+          <option value="En attente" <%=rdv.statut==='En attente' ? 'selected' : '' %>>En attente</option>
+          <option value="Confirmé" <%=rdv.statut==='Confirmé' ? 'selected' : '' %>>Confirmé</option>
+          <option value="Annulé" <%=rdv.statut==='Annulé' ? 'selected' : '' %>>Annulé</option>
+        </select>
+        <select name="duree">
+          <option value="30 minutes" <%=rdv.duree==='30 minutes' ? 'selected' : '' %>>30 min</option>
+          <option value="1 heure" <%=rdv.duree==='1 heure' ? 'selected' : '' %>>1 heure</option>
+          <option value="1 heure 30" <%=rdv.duree==='1 heure 30' ? 'selected' : '' %>>1h30</option>
+        </select>
+      </div>
+      <textarea name="notes" placeholder="Notes"><%= rdv.notes || '' %></textarea>
+      <button type="submit" class="btn-primary">💾 Enregistrer</button>
+      <a href="/rendezvous/view/<%= rdv.id %>" class="btn-secondary">Annuler</a>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

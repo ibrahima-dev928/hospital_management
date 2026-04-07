@@ -1,0 +1,64 @@
+<%- include('../partials/header', { title: `Patient ${patient.prenom} ${patient.nom}`, currentPath: '/patients' }) %>
+  <div class="card">
+    <div style="display: flex; gap: 20px; align-items: center;">
+      <div>
+        <% if (patient.photo) { %>
+          <img src="/<%= patient.photo %>" style="width:150px;height:150px;object-fit:cover;border-radius:50%;">
+          <% } else { %>
+            <div
+              style="width:150px;height:150px;background:#ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+              📷</div>
+            <% } %>
+              <div style="margin-top:10px;">
+                <button onclick="document.getElementById('photoInput').click()">📸 Changer photo</button>
+                <button onclick="openCamera()">🎥 Webcam</button>
+                <% if (patient.photo) { %>
+                  <a href="/patients/deletephoto/<%= patient.id %>" class="btn-danger"
+                    onclick="return confirm('Supprimer ?')">🗑️</a>
+                  <% } %>
+                    <form action="/patients/upload/<%= patient.id %>" method="POST" enctype="multipart/form-data"
+                      style="display:none;">
+                      <input type="file" id="photoInput" name="photo" accept="image/*" onchange="this.form.submit()">
+                    </form>
+              </div>
+      </div>
+      <div>
+        <h2>
+          <%= patient.prenom %>
+            <%= patient.nom %>
+        </h2>
+        <p>📅 <%= patient.date_naissance || 'N/A' %>
+        </p>
+        <p>📞 <%= patient.telephone || 'N/A' %>
+        </p>
+        <p>✉️ <%= patient.email || 'N/A' %>
+        </p>
+        <p>🏠 <%= patient.adresse || 'N/A' %>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function openCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.createElement('video');
+      video.srcObject = stream; video.play();
+      const modal = document.createElement('div'); modal.style.position = 'fixed'; modal.style.top = 0; modal.style.left = 0; modal.style.width = '100%'; modal.style.height = '100%'; modal.style.background = 'rgba(0,0,0,0.8)'; modal.style.display = 'flex'; modal.style.flexDirection = 'column'; modal.style.alignItems = 'center'; modal.style.justifyContent = 'center';
+      const canvas = document.createElement('canvas');
+      const captureBtn = document.createElement('button'); captureBtn.innerText = '📸 Prendre';
+      modal.appendChild(video); modal.appendChild(captureBtn);
+      document.body.appendChild(modal);
+      captureBtn.onclick = () => {
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.toBlob(blob => {
+          const fd = new FormData();
+          fd.append('photo', blob, 'webcam.jpg');
+          fetch(`/patients/upload/<%= patient.id %>`, { method: 'POST', body: fd }).then(() => location.reload());
+        });
+        stream.getTracks().forEach(t => t.stop());
+        modal.remove();
+      };
+    }
+  </script>
+  <%- include('../partials/footer') %>

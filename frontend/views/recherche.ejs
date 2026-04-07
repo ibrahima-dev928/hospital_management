@@ -1,0 +1,160 @@
+<%- include('partials/header', { title: 'Recherche' , currentPath: '/recherche' }) %>
+
+  <div class="card">
+    <h2>🔍 Recherche avancée</h2>
+    <form id="search-form" action="/recherche" method="GET">
+      <div class="form-group">
+        <input type="text" name="q" value="<%= query || '' %>" placeholder="Nom, prénom, spécialité, téléphone..."
+          style="width: 100%; padding: 12px;">
+      </div>
+      <div class="quick-filters" style="display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap;">
+        <label style="display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="type" value="tous" <%=type==='tous' ? 'checked' : '' %>
+          onchange="this.form.submit()"> Tous
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="type" value="patients" <%=type==='patients' ? 'checked' : '' %>
+          onchange="this.form.submit()"> Patients
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="type" value="medecins" <%=type==='medecins' ? 'checked' : '' %>
+          onchange="this.form.submit()"> Médecins
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="type" value="rendezvous" <%=type==='rendezvous' ? 'checked' : '' %>
+          onchange="this.form.submit()"> Rendez-vous
+        </label>
+      </div>
+      <button type="submit" class="btn-primary">🔍 Rechercher</button>
+    </form>
+  </div>
+
+  <% if (query) { var total=patients.length + medecins.length + rendezvous.length; %>
+    <div class="card">
+      <div class="result-summary" style="margin-bottom: 20px; padding: 10px; background: #e3f2fd; border-radius: 8px;">
+        🔎 <strong>
+          <%= total %>
+        </strong> résultat(s) trouvé(s) pour "<%= query %>"
+      </div>
+
+      <% if (patients.length> 0) { %>
+        <h3>👥 Patients (<%= patients.length %>)</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Téléphone</th>
+              <th>Email</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<patients.length; i++) { var p=patients[i]; %>
+              <tr>
+                <td>#<%= p.id %>
+                </td>
+                <td>
+                  <%= p.nom %>
+                </td>
+                <td>
+                  <%= p.prenom %>
+                </td>
+                <td>
+                  <%= p.telephone || '-' %>
+                </td>
+                <td>
+                  <%= p.email || '-' %>
+                </td>
+                <td><a href="/patients/view/<%= p.id %>" class="btn-info btn-sm">👁️ Voir</a></td>
+              </tr>
+              <% } %>
+          </tbody>
+        </table>
+        <% } %>
+
+          <% if (medecins.length> 0) { %>
+            <h3>👨‍⚕️ Médecins (<%= medecins.length %>)</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Spécialité</th>
+                  <th>Téléphone</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(var i=0; i<medecins.length; i++) { var m=medecins[i]; %>
+                  <tr>
+                    <td>#<%= m.id %>
+                    </td>
+                    <td>
+                      <%= m.nom %>
+                    </td>
+                    <td>
+                      <%= m.prenom %>
+                    </td>
+                    <td>
+                      <%= m.specialite %>
+                    </td>
+                    <td>
+                      <%= m.telephone || '-' %>
+                    </td>
+                    <td><a href="/medecins/view/<%= m.id %>" class="btn-info btn-sm">👁️ Voir</a></td>
+                  </tr>
+                  <% } %>
+              </tbody>
+            </table>
+            <% } %>
+
+              <% if (rendezvous.length> 0) { %>
+                <h3>📅 Rendez-vous (<%= rendezvous.length %>)</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Patient</th>
+                      <th>Médecin</th>
+                      <th>Date</th>
+                      <th>Statut</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(var i=0; i<rendezvous.length; i++) { var rdv=rendezvous[i]; %>
+                      <tr>
+                        <td>#<%= rdv.id %>
+                        </td>
+                        <td>Patient #<%= rdv.patient_id %>
+                        </td>
+                        <td>Médecin #<%= rdv.medecin_id %>
+                        </td>
+                        <td>
+                          <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+                        </td>
+                        <td>
+                          <%= rdv.statut %>
+                        </td>
+                        <td><a href="/rendezvous/view/<%= rdv.id %>" class="btn-info btn-sm">👁️ Voir</a></td>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+                <% } %>
+
+                  <% if (total===0) { %>
+                    <div class="alert alert-warning">Aucun résultat trouvé pour cette recherche.</div>
+                    <% } %>
+    </div>
+    <% } else { %>
+      <div class="card" style="text-align: center; padding: 40px;">
+        <h3>🔎 Utilisez la barre de recherche ci-dessus</h3>
+        <p>Recherchez par nom, prénom, spécialité, téléphone, email, ou statut de rendez-vous.</p>
+      </div>
+      <% } %>
+
+        <%- include('partials/footer') %>

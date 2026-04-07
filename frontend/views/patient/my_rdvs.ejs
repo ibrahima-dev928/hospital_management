@@ -1,0 +1,48 @@
+<%- include('../partials/header', { title: 'Mes rendez-vous' , currentPath: '/patient/rdv' }) %>
+  <div class="card">
+    <h2>Mes rendez-vous</h2>
+    <% if (!rdvs || rdvs.length===0) { %>
+      <p>Vous n'avez aucun rendez-vous pour le moment.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Médecin</th>
+              <th>Spécialité</th>
+              <th>Statut</th>
+              <th>Motif</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rdvs.forEach(rdv=> { %>
+              <tr>
+                <td>
+                  <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+                </td>
+                <td>
+                  <%= rdv.medecin_nom || 'Médecin' %>
+                </td>
+                <td>
+                  <%= rdv.specialite || '-' %>
+                </td>
+                <td>
+                  <% if (rdv.statut==='confirmé' ) { %>
+                    <span style="color:green;">✅ Confirmé</span>
+                    <% } else if (rdv.statut==='refusé' ) { %>
+                      <span style="color:red;">❌ Refusé</span>
+                      <% } else { %>
+                        <span style="color:orange;">⏳ En attente</span>
+                        <% } %>
+                </td>
+                <td>
+                  <%= rdv.motif || '-' %>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+          <a href="/patient/prendre-rdv" class="btn-primary">➕ Nouveau rendez-vous</a>
+  </div>
+  <%- include('../partials/footer') %>

@@ -1,0 +1,56 @@
+<%- include('../partials/header', { title: 'Patients' , currentPath: '/patients' }) %>
+  <% if (locals.success) { %>
+    <div class="success">
+      <%= success %>
+    </div>
+    <% } %>
+      <div class="card">
+        <h2>➕ Ajouter un patient</h2>
+        <form action="/patients" method="POST">
+          <div class="form-row">
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="text" name="telephone" placeholder="Téléphone">
+            <input type="email" name="email" placeholder="Email">
+            <button type="submit" class="btn-primary">Ajouter</button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>📋 Liste des patients (<%= patients.length %>)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Téléphone</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% patients.forEach(p=> { %>
+              <tr>
+                <td>#<%= p.id %>
+                </td>
+                <td>
+                  <%= p.nom %>
+                </td>
+                <td>
+                  <%= p.prenom %>
+                </td>
+                <td>
+                  <%= p.telephone || '-' %>
+                </td>
+                <td>
+                  <a href="/patients/view/<%= p.id %>" class="btn-info">👁️</a>
+                  <a href="/patients/edit/<%= p.id %>" class="btn-edit">✏️</a>
+                  <a href="/patients/delete/<%= p.id %>" class="btn-danger"
+                    onclick="return confirm('Supprimer ?')">🗑️</a>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <%- include('../partials/footer') %>

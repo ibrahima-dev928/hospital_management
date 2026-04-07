@@ -1,0 +1,43 @@
+<%- include('../partials/header', { title: 'Gestion utilisateurs' , currentPath: '/admin/users' }) %>
+  <div class="card">
+    <a href="/admin/users/new" class="btn-primary">➕ Ajouter un utilisateur</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u=> { %>
+          <tr>
+            <td>
+              <%= u.id %>
+            </td>
+            <td>
+              <%= u.nom %>
+            </td>
+            <td>
+              <%= u.prenom %>
+            </td>
+            <td>
+              <%= u.email %>
+            </td>
+            <td>
+              <%= u.role %>
+            </td>
+            <td>
+              <a href="/admin/users/edit/<%= u.id %>" class="btn-edit">✏️</a>
+              <a href="/admin/users/delete/<%= u.id %>" class="btn-danger"
+                onclick="return confirm('Supprimer ?')">🗑️</a>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

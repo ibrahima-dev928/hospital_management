@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="<%= theme %>">
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="sidebar-header">🏥 HOPITAL V6</div>
+      <div class="sidebar-menu">
+        <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">🏠 Accueil</a>
+
+        <% if (user) { %>
+          <% if (user.role==='admin' ) { %>
+            <a href="/patients" class="<%= currentPath.startsWith('/patients') ? 'active' : '' %>">👥 Patients</a>
+            <a href="/medecins" class="<%= currentPath.startsWith('/medecins') ? 'active' : '' %>">👨‍⚕️ Médecins</a>
+            <a href="/rendezvous" class="<%= currentPath.startsWith('/rendezvous') ? 'active' : '' %>">📅
+              Rendez-vous</a>
+            <a href="/recherche" class="<%= currentPath.startsWith('/recherche') ? 'active' : '' %>">🔍 Recherche</a>
+            <a href="/stats" class="<%= currentPath.startsWith('/stats') ? 'active' : '' %>">📊 Stats</a>
+            <a href="/parametres" class="<%= currentPath.startsWith('/parametres') ? 'active' : '' %>">⚙️ Paramètres</a>
+            <a href="/admin/users" class="<%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">👥
+              Utilisateurs</a>
+            <!-- Nouveaux liens pour l'admin : Bâtiments et Chambres -->
+            <a href="/admin/batiments" class="<%= currentPath.startsWith('/admin/batiments') ? 'active' : '' %>">🏢
+              Bâtiments</a>
+            <a href="/admin/chambres" class="<%= currentPath.startsWith('/admin/chambres') ? 'active' : '' %>">🛏️
+              Chambres</a>
+            <% } else if (user.role==='medecin' ) { %>
+              <a href="/medecin/dashboard"
+                class="<%= currentPath.startsWith('/medecin/dashboard') ? 'active' : '' %>">📋
+                Tableau de bord</a>
+              <a href="/medecin/patients" class="<%= currentPath.startsWith('/medecin/patients') ? 'active' : '' %>">👥
+                Mes patients</a>
+              <a href="/medecin/disponibilites"
+                class="<%= currentPath.startsWith('/medecin/disponibilites') ? 'active' : '' %>">⏰ Mes
+                disponibilités</a>
+              <a href="/rendezvous" class="<%= currentPath.startsWith('/rendezvous') ? 'active' : '' %>">📅 Tous les
+                RDV</a>
+              <!-- Lien Admissions pour le médecin -->
+              <a href="/medecin/admissions"
+                class="<%= currentPath.startsWith('/medecin/admissions') ? 'active' : '' %>">🏥
+                Admissions</a>
+              <!-- Lien Factures pour le médecin -->
+              <a href="/medecin/factures" class="<%= currentPath.startsWith('/medecin/factures') ? 'active' : '' %>">🧾
+                Factures</a>
+              <a href="/recherche" class="<%= currentPath.startsWith('/recherche') ? 'active' : '' %>">🔍 Recherche</a>
+              <% } else if (user.role==='patient' ) { %>
+                <a href="/patient/dossiers"
+                  class="<%= currentPath.startsWith('/patient/dossiers') ? 'active' : '' %>">📄
+                  Mes dossiers médicaux</a>
+                <a href="/patient/rdv" class="<%= currentPath.startsWith('/patient/rdv') ? 'active' : '' %>">📅 Mes
+                  rendez-vous</a>
+                <a href="/patient/prendre-rdv"
+                  class="<%= currentPath.startsWith('/patient/prendre-rdv') ? 'active' : '' %>">➕
+                  Prendre rendez-vous</a>
+                <!-- Lien Mes hospitalisations pour le patient -->
+                <a href="/patient/admissions"
+                  class="<%= currentPath.startsWith('/patient/admissions') ? 'active' : '' %>">🏥
+                  Mes hospitalisations</a>
+                <!-- Lien Mes factures pour le patient -->
+                <a href="/patient/factures"
+                  class="<%= currentPath.startsWith('/patient/factures') ? 'active' : '' %>">🧾
+                  Mes factures</a>
+                <a href="/recherche" class="<%= currentPath.startsWith('/recherche') ? 'active' : '' %>">🔍
+                  Recherche</a>
+                <% } %>
+                  <% } %>
+      </div>
+    </div>
+    <div class="navbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="navbar-brand">
+        <%= title %>
+      </div>
+      <div class="navbar-controls">
+        <% if (user) { %>
+          <div class="theme-switch" onclick="toggleTheme()">
+            <%= theme==='dark' ? '🌙' : '☀️' %>
+          </div>
+          <div class="user-menu" onclick="toggleUserDropdown()">
+            <div class="user-avatar">
+              <%= user.prenom.charAt(0) %>
+                <%= user.nom.charAt(0) %>
+            </div>
+            <div class="user-info">
+              <%= user.prenom %>
+                <%= user.nom %>
+            </div>
+          </div>
+          <!-- Cloche de notification pour les patients -->
+          <% if (user.role==='patient' ) { %>
+            <a href="/patient/notifications" class="notification-bell" style="font-size:1.5rem;">🔔</a>
+            <% } %>
+              <div id="userDropdown" class="dropdown-card" style="display:none;">
+                <a href="/logout">🚪 Déconnexion</a>
+              </div>
+              <% } else { %>
+                <!-- Lien d'inscription pour les visiteurs non connectés -->
+                <a href="/register" class="btn-secondary" style="margin-right: 10px;">📝 S'inscrire</a>
+                <a href="/login" class="btn-primary">🔐 Connexion</a>
+                <% } %>
+      </div>
+    </div>
+    <div class="content-area">

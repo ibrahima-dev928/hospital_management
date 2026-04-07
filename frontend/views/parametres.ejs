@@ -1,0 +1,80 @@
+<%- include('partials/header', { title: 'Paramètres' , currentPath: '/parametres' }) %>
+
+  <div class="content-header">
+    <h1 class="page-title">⚙️ Paramètres du système</h1>
+    <p class="page-subtitle">Configuration générale de l'application</p>
+  </div>
+
+  <% if (locals.success) { %>
+    <div class="success">
+      <%= success %>
+    </div>
+    <% } %>
+
+      <div class="card">
+        <form action="/parametres" method="POST">
+          <h2>🎨 Apparence</h2>
+          <div class="form-group">
+            <label>Thème par défaut</label>
+            <select name="theme" class="form-control">
+              <option value="light" <%=prefs.theme==='light' ? 'selected' : '' %>>☀️ Clair</option>
+              <option value="dark" <%=prefs.theme==='dark' ? 'selected' : '' %>>🌙 Sombre</option>
+            </select>
+          </div>
+
+          <h2>🔔 Notifications</h2>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="notifications" <%=prefs.notifications ? 'checked' : '' %>> Activer les
+              notifications système
+            </label>
+          </div>
+
+          <h2>🌐 Langue</h2>
+          <div class="form-group">
+            <select name="language">
+              <option value="fr" <%=prefs.language==='fr' ? 'selected' : '' %>>Français</option>
+              <option value="en" <%=prefs.language==='en' ? 'selected' : '' %>>English</option>
+            </select>
+          </div>
+
+          <h2>📄 Affichage</h2>
+          <div class="form-group">
+            <label>Résultats par page</label>
+            <select name="results_per_page">
+              <option value="5" <%=prefs.results_per_page==5 ? 'selected' : '' %>>5</option>
+              <option value="10" <%=prefs.results_per_page==10 ? 'selected' : '' %>>10</option>
+              <option value="25" <%=prefs.results_per_page==25 ? 'selected' : '' %>>25</option>
+              <option value="50" <%=prefs.results_per_page==50 ? 'selected' : '' %>>50</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="auto_save" <%=prefs.auto_save ? 'checked' : '' %>> Sauvegarde automatique
+            </label>
+          </div>
+
+          <h2>🏥 Informations de l'hôpital</h2>
+          <div class="form-group">
+            <label>Nom de l'hôpital</label>
+            <input type="text" name="hospital_name" value="<%= prefs.hospital_name %>" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Adresse</label>
+            <textarea name="hospital_address" rows="2"
+              class="form-control"><%= prefs.hospital_address || '' %></textarea>
+          </div>
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input type="text" name="hospital_phone" value="<%= prefs.hospital_phone || '' %>" class="form-control">
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn-primary">💾 Enregistrer les paramètres</button>
+            <a href="/" class="btn-secondary">🏠 Retour à l'accueil</a>
+          </div>
+        </form>
+      </div>
+
+      <%- include('partials/footer') %>

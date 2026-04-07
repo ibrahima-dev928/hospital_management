@@ -1,0 +1,37 @@
+<%- include('../partials/header', { title: 'Prendre rendez-vous' , currentPath: '/patient/prendre-rdv' }) %>
+  <div class="card">
+    <h2>Prendre un rendez-vous en ligne</h2>
+    <form id="rdvForm" action="/patient/prendre-rdv" method="POST">
+      <div class="form-group">
+        <label>Médecin</label>
+        <select id="medecin" name="medecin_id" required>
+          <option value="">Choisissez un médecin</option>
+          <% medecins.forEach(m=> { %>
+            <option value="<%= m.id %>">
+              <%= m.prenom %>
+                <%= m.nom %> - <%= m.specialite %>
+            </option>
+            <% }) %>
+        </select>
+      </div>
+      <div id="dispos"></div>
+      <div class="form-group">
+        <label>Motif (optionnel)</label>
+        <textarea name="motif" rows="2"></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Envoyer la demande</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('medecin').addEventListener('change', function () {
+      const id = this.value;
+      if (!id) return;
+      fetch(`/patient/api/disponibilites/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('dispos');
+          container.innerHTML = '<h3>Créneaux disponibles (à implémenter)</h3><p>Cette démo affiche les créneaux bruts. Vous devez intégrer un datepicker.</p><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        });
+    });
+  </script>
+  <%- include('../partials/footer') %>

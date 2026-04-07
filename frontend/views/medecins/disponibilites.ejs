@@ -1,0 +1,55 @@
+<%- include('../partials/header', { title: 'Mes disponibilités' , currentPath: '/medecin/disponibilites' }) %>
+  <div class="card">
+    <h2>Ajouter une disponibilité</h2>
+    <form action="/medecin/disponibilites" method="POST">
+      <div class="form-row">
+        <select name="jour_semaine" required>
+          <option value="1">Lundi</option>
+          <option value="2">Mardi</option>
+          <option value="3">Mercredi</option>
+          <option value="4">Jeudi</option>
+          <option value="5">Vendredi</option>
+          <option value="6">Samedi</option>
+          <option value="7">Dimanche</option>
+        </select>
+        <input type="time" name="heure_debut" required>
+        <input type="time" name="heure_fin" required>
+        <input type="number" name="duree_rdv" placeholder="Durée (min)" value="30">
+      </div>
+      <button type="submit" class="btn-primary">Ajouter</button>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Mes créneaux actuels</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Jour</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Durée</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dispos.forEach(d=> { %>
+          <tr>
+            <td>
+              <%= d.jour_semaine %>
+            </td>
+            <td>
+              <%= d.heure_debut %>
+            </td>
+            <td>
+              <%= d.heure_fin %>
+            </td>
+            <td>
+              <%= d.duree_rdv %> min
+            </td>
+            <td><a href="/medecin/disponibilites/delete/<%= d.id %>" class="btn-danger">Supprimer</a></td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

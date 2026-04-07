@@ -1,0 +1,26 @@
+<%- include('../partials/header', { title: `Modifier ${patient.prenom} ${patient.nom}`, currentPath: '/patients' }) %>
+  <div class="card">
+    <form action="/patients/update/<%= patient.id %>" method="POST">
+      <div class="form-row">
+        <input type="text" name="nom" value="<%= patient.nom %>" required>
+        <input type="text" name="prenom" value="<%= patient.prenom %>" required>
+      </div>
+      <div class="form-row">
+        <input type="date" name="date_naissance"
+          value="<%= patient.date_naissance ? patient.date_naissance.toISOString().substr(0,10) : '' %>">
+        <select name="genre">
+          <option value="">Genre</option>
+          <option value="M" <%=patient.genre==='M' ? 'selected' : '' %>>Masculin</option>
+          <option value="F" <%=patient.genre==='F' ? 'selected' : '' %>>Féminin</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <input type="tel" name="telephone" value="<%= patient.telephone || '' %>">
+        <input type="email" name="email" value="<%= patient.email || '' %>">
+      </div>
+      <textarea name="adresse" rows="2"><%= patient.adresse || '' %></textarea>
+      <button type="submit" class="btn-primary">💾 Enregistrer</button>
+      <a href="/patients/view/<%= patient.id %>" class="btn-secondary">Annuler</a>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

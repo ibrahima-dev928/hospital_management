@@ -1,0 +1,140 @@
+<%- include('../partials/header', { title: 'Prendre rendez-vous' , currentPath: '/patient/prendre-rdv' }) %>
+  <div class="card">
+    <h2>Prendre un rendez-vous en ligne</h2>
+    <% if (locals.error) { %>
+      <div class="error">
+        <%= error %>
+      </div>
+      <% } %>
+        <% if (locals.success) { %>
+          <div class="success">
+            <%= success %>
+          </div>
+          <% } %>
+            <form id="rdvForm" action="/patient/prendre-rdv" method="POST">
+              <div class="form-group">
+                <label>Médecin</label>
+                <select id="medecin" name="medecin_id" required>
+                  <option value="">Choisissez un médecin</option>
+                  <% medecins.forEach(m=> { %>
+                    <option value="<%= m.id %>">
+                      <%= m.prenom %>
+                        <%= m.nom %> - <%= m.specialite %>
+                    </option>
+                    <% }) %>
+                </select>
+              </div>
+              <div id="dispos" style="margin-top: 20px;"></div>
+              <div class="form-group">
+                <label>Motif (optionnel)</label>
+                <textarea name="motif" rows="2"></textarea>
+              </div>
+              <button type="submit" class="btn-primary">Envoyer la demande</button>
+            </form>
+  </div>
+
+  <script>
+    // Attendre que le DOM soit chargé
+    document.addEventListener('DOMContentLoaded', function () {
+      const medecinSelect = document.getElementById('medecin');
+      const disposDiv = document.getElementById('dispos');
+
+      medecinSelect.addEventListener('change', async function () {
+        const medecinId = this.value;
+        if (!medecinId) {
+          disposDiv.innerHTML = '';
+          return;
+        }
+
+        // Récupérer les disponibilités du médecin (jours et plages horaires)
+        const response = await fetch(`/patient/api/disponibilites/${medecinId}`);
+        const dispos = await response.json();
+
+        if (dispos.length === 0) {
+          disposDiv.innerHTML = '<p class="error">Ce médecin n’a pas encore défini ses disponibilités.</p>';
+          return;
+        }
+
+        // Générer le sélecteur de date et de créneau
+        let html = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <select id="date_rdv" name="date_rdv" required>
+                        <option value="">Choisissez une date</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Heure</label>
+                    <select id="heure_rdv" name="heure_rdv" required disabled>
+                        <option value="">Sélectionnez d'abord une date</option>
+                    </select>
+                </div>
+            </div>
+        `;
+        disposDiv.innerHTML = html;
+
+        const dateSelect = document.getElementById('date_rdv');
+        const heureSelect = document.getElementById('heure_rdv');
+
+        // Convertir les disponibilités en dates possibles (prochaines 30 jours)
+        const joursSemaine = { 1: 'Lun', 2: 'Mar', 3: 'Mer', 4: 'Jeu', 5: 'Ven', 6: 'Sam', 7: 'Dim' };
+        const today = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+        // Générer les dates des 30 prochains jours
+        for (let i = 0; i <= 30; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() + i);
+          const jourSemaine = date.getDay(); // 0=dim, 1=lun, ..., 6=sam
+          // Convertir en notre format (1=lundi, 7=dimanche)
+          let jourNum = jourSemaine === 0 ? 7 : jourSemaine;
+          // Vérifier si ce jour est dans les disponibilités
+          const dispoJour = dispos.find(d => d.jour_semaine === jourNum);
+          if (dispoJour) {
+            const dateStr = date.toISOString().split('T')[0];
+            const dateLabel = date.toLocaleDateString('fr-FR');
+            dateSelect.innerHTML += `<option value="${dateStr}">${dateLabel} (${joursSemaine[jourNum]})</option>`;
+          }
+        }
+
+        // Quand la date change, générer les créneaux horaires
+        dateSelect.addEventListener('change', async function () {
+          const selectedDate = this.value;
+          if (!selectedDate) {
+            heureSelect.innerHTML = '<option value="">Sélectionnez d\'abord une date</option>';
+            heureSelect.disabled = true;
+            return;
+          }
+
+          // Récupérer le jour de la semaine de la date choisie
+          const dateObj = new Date(selectedDate);
+          let jourSemaine = dateObj.getDay();
+          jourSemaine = jourSemaine === 0 ? 7 : jourSemaine;
+          const dispoJour = dispos.find(d => d.jour_semaine === jourSemaine);
+          if (!dispoJour) return;
+
+          // Calculer les créneaux selon heure_debut, heure_fin, duree_rdv
+          const start = dispoJour.heure_debut;
+          const end = dispoJour.heure_fin;
+          const duree = dispoJour.duree_rdv || 30; // minutes
+          const slots = [];
+          let current = new Date(`2000-01-01T${start}`);
+          const endTime = new Date(`2000-01-01T${end}`);
+          while (current < endTime) {
+            const heure = current.toTimeString().slice(0, 5);
+            slots.push(heure);
+            current.setMinutes(current.getMinutes() + duree);
+          }
+          // Vérifier les rendez-vous déjà pris (optionnel, mais vous pouvez appeler une API)
+          // Pour l'instant on affiche tous les créneaux
+          heureSelect.innerHTML = '<option value="">Choisissez une heure</option>';
+          slots.forEach(slot => {
+            heureSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+          });
+          heureSelect.disabled = false;
+        });
+      });
+    });
+  </script>
+  <%- include('../partials/footer') %>

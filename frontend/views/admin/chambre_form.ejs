@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: 'Ajouter une chambre' , currentPath: '/admin/chambres' }) %>
+  <div class="card">
+    <form action="/admin/chambres" method="POST">
+      <div class="form-group">
+        <label>Bâtiment</label>
+        <select name="batiment_id" required>
+          <option value="">Sélectionner</option>
+          <% batiments.forEach(b=> { %>
+            <option value="<%= b.id %>">
+              <%= b.nom %>
+            </option>
+            <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Numéro de chambre</label>
+        <input type="text" name="numero" required>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="type">
+          <option value="standard">Standard</option>
+          <option value="double">Double</option>
+          <option value="suite">Suite</option>
+          <option value="soins_intensifs">Soins intensifs</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Capacité (nombre de lits)</label>
+        <input type="number" name="capacite" value="1" min="1">
+      </div>
+      <button type="submit" class="btn-primary">💾 Enregistrer</button>
+      <a href="/admin/chambres" class="btn-secondary">Annuler</a>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>

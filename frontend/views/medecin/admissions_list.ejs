@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: 'Admissions en cours' , currentPath: '/medecin/admissions' }) %>
+  <div class="card">
+    <h2>Patients hospitalisés</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Chambre</th>
+          <th>Admis le</th>
+          <th>Motif</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% admissions.forEach(a=> { %>
+          <tr>
+            <td>
+              <%= a.patient_prenom %>
+                <%= a.patient_nom %>
+            </td>
+            <td>Bâtiment <%= a.batiment_nom %> - Chambre <%= a.numero %>
+            </td>
+            <td>
+              <%= new Date(a.date_admission).toLocaleString() %>
+            </td>
+            <td>
+              <%= a.motif %>
+            </td>
+            <td><a href="/medecin/admission/liberer/<%= a.id %>" class="btn-warning"
+                onclick="return confirm('Libérer la chambre ?')">Libérer</a></td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>

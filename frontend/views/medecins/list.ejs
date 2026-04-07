@@ -1,0 +1,63 @@
+<%- include('../partials/header', { title: 'Médecins' , currentPath: '/medecins' }) %>
+  <% if (locals.success) { %>
+    <div class="success">
+      <%= success %>
+    </div>
+    <% } %>
+      <div class="card">
+        <h2>➕ Ajouter un médecin</h2>
+        <form action="/medecins" method="POST">
+          <div class="form-row">
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="text" name="specialite" placeholder="Spécialité" required>
+          </div>
+          <div class="form-row">
+            <input type="tel" name="telephone" placeholder="Téléphone">
+            <input type="email" name="email" placeholder="Email">
+            <input type="text" name="disponibilite" placeholder="Disponibilité">
+          </div>
+          <button type="submit" class="btn-primary">Ajouter</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>📋 Liste des médecins (<%= medecins.length %>)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Spécialité</th>
+              <th>Téléphone</th>
+              <th>Actions</th>
+          </thead>
+          <tbody>
+            <% medecins.forEach(m=> { %>
+              <tr>
+                <td>#<%= m.id %>
+                </td>
+                <td>
+                  <%= m.nom %>
+                </td>
+                <td>
+                  <%= m.prenom %>
+                </td>
+                <td>
+                  <%= m.specialite %>
+                </td>
+                <td>
+                  <%= m.telephone || '-' %>
+                </td>
+                <td>
+                  <a href="/medecins/view/<%= m.id %>" class="btn-info">👁️</a>
+                  <a href="/medecins/edit/<%= m.id %>" class="btn-edit">✏️</a>
+                  <a href="/medecins/delete/<%= m.id %>" class="btn-danger"
+                    onclick="return confirm('Supprimer ?')">🗑️</a>
+                </td>
+        </table>
+        <% }) %>
+          </tbody>
+          </table>
+      </div>
+      <%- include('../partials/footer') %>

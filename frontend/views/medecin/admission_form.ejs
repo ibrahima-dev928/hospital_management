@@ -1,0 +1,48 @@
+<%- include('../partials/header', { title: `Admission de ${patient.prenom} ${patient.nom}`,
+  currentPath: '/medecin/patients' }) %>
+  <div class="card">
+    <h2>Admission à l'hôpital</h2>
+    <form action="/medecin/admission" method="POST">
+      <input type="hidden" name="patient_id" value="<%= patient.id %>">
+      <div class="form-group">
+        <label>Bâtiment / Bloc</label>
+        <select id="batiment" required>
+          <option value="">Choisir un bâtiment</option>
+          <% batiments.forEach(b=> { %>
+            <option value="<%= b.id %>">
+              <%= b.nom %>
+            </option>
+            <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Chambre</label>
+        <select name="chambre_id" id="chambre" required>
+          <option value="">Sélectionnez d'abord un bâtiment</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date et heure d'admission</label>
+        <input type="datetime-local" name="date_admission" required>
+      </div>
+      <div class="form-group">
+        <label>Motif de l'admission</label>
+        <textarea name="motif" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Admettre le patient</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('batiment').addEventListener('change', async function () {
+      const id = this.value;
+      if (!id) return;
+      const res = await fetch(`/medecin/api/chambres/batiment/${id}`);
+      const chambres = await res.json();
+      const select = document.getElementById('chambre');
+      select.innerHTML = '<option value="">Choisir une chambre</option>';
+      chambres.forEach(c => {
+        select.innerHTML += `<option value="${c.id}">Chambre ${c.numero} - ${c.type}</option>`;
+      });
+    });
+  </script>
+  <%- include('../partials/footer') %>

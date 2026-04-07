@@ -1,0 +1,102 @@
+<%- include('../partials/header', { title: `Dr. ${medecin.prenom} ${medecin.nom}`, currentPath: '/medecins' }) %>
+  <div class="card" style="display: flex; gap: 20px; align-items: flex-start;">
+    <div style="text-align: center;">
+      <% if (medecin.photo) { %>
+        <img src="/<%= medecin.photo %>" style="width:150px;height:150px;object-fit:cover;border-radius:50%;">
+        <% } else { %>
+          <div
+            style="width:150px;height:150px;background:#ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            📷</div>
+          <% } %>
+            <div style="margin-top:10px;">
+              <button onclick="document.getElementById('photoInput').click()">📸 Changer photo</button>
+              <button onclick="openCamera()">🎥 Webcam</button>
+              <% if (medecin.photo) { %>
+                <a href="/medecins/deletephoto/<%= medecin.id %>" class="btn-danger"
+                  onclick="return confirm('Supprimer ?')">🗑️</a>
+                <% } %>
+                  <form action="/medecins/upload/<%= medecin.id %>" method="POST" enctype="multipart/form-data"
+                    style="display:none;">
+                    <input type="file" id="photoInput" name="photo" accept="image/*" onchange="this.form.submit()">
+                  </form>
+            </div>
+    </div>
+    <div>
+      <h2>Dr. <%= medecin.prenom %>
+          <%= medecin.nom %>
+      </h2>
+      <p>🔬 Spécialité : <%= medecin.specialite %>
+      </p>
+      <p>📞 Tél : <%= medecin.telephone || 'N/A' %>
+      </p>
+      <p>✉️ Email : <%= medecin.email || 'N/A' %>
+      </p>
+      <p>⏰ Disponibilité : <%= medecin.disponibilite || 'N/A' %>
+      </p>
+      <a href="/medecins/edit/<%= medecin.id %>" class="btn-edit">✏️ Modifier</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📅 Rendez-vous du médecin</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Patient</th>
+          <th>Statut</th>
+      </thead>
+      <tbody>
+        <% rdvs.forEach(rdv=> { %>
+          <tr>
+            <td>
+              <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+            </td>
+            <td>Patient #<%= rdv.patient_id %>
+            </td>
+            <td>
+              <%= rdv.statut %>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    async function openCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.createElement('video');
+      video.srcObject = stream; video.play();
+      const modal = document.createElement('div'); modal.className = 'camera-modal';
+      const canvas = document.createElement('canvas');
+      const captureBtn = document.createElement('button'); captureBtn.innerText = '📸 Prendre';
+      modal.appendChild(video); modal.appendChild(captureBtn);
+      document.body.appendChild(modal);
+      captureBtn.onclick = () => {
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.toBlob(blob => {
+          const fd = new FormData();
+          fd.append('photo', blob, 'webcam.jpg');
+          fetch(`/medecins/upload/<%= medecin.id %>`, { method: 'POST', body: fd }).then(() => location.reload());
+        });
+        stream.getTracks().forEach(t => t.stop());
+        modal.remove();
+      };
+    }
+  </script>
+  <style>
+    .camera-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+  </style>
+  <%- include('../partials/footer') %>

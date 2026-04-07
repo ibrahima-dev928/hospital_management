@@ -1,0 +1,31 @@
+<%- include('../partials/header', { title: 'Mes rendez-vous' , currentPath: '/patient/rdv' }) %>
+  <div class="card">
+    <h2>Mes rendez-vous</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Médecin</th>
+          <th>Statut</th>
+          <th>Motif</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rdvs.forEach(rdv=> { %>
+          <tr>
+            <td>
+              <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+            </td>
+            <td>Dr. ?</td>
+            <td>
+              <%= rdv.statut %>
+            </td>
+            <td>
+              <%= rdv.motif || '-' %>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../partials/footer') %>
