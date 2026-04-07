@@ -59,5 +59,25 @@ app.listen(port, '0.0.0.0', () => {
   console.log(`🏥 HOPITAL V6 - MySQL - port ${port}`);
 });
 
+app.get('/check-users', async (req, res) => {
+  const db = require('./models/db');
+  try {
+    const [rows] = await db.query('SELECT id, username, role FROM users');
+    res.json(rows);
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
+app.get('/test-db', async (req, res) => {
+  const db = require('./models/db');
+  try {
+    const [rows] = await db.query('SELECT COUNT(*) as count FROM users');
+    res.send(`Connexion OK, nombre d'utilisateurs : ${rows[0].count}`);
+  } catch (err) {
+    res.send(`Erreur : ${err.message}`);
+  }
+});
+
 app.use('/admin/batiments', require('./routes/admin/batiments'));
 app.use('/admin/chambres', require('./routes/admin/chambres'));
