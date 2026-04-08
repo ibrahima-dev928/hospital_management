@@ -43,3 +43,10 @@ exports.deletePhoto = async (req, res) => {
   await Patient.updatePhoto(req.params.id, null);
   res.redirect(`/patients/view/${req.params.id}?success=Photo supprimée`);
 };
+
+exports.edit = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const patient = await Patient.findById(id);
+  if (!patient) return res.redirect('/patients?error=Patient introuvable');
+  res.render('patients/edit', { patient, title: `Modifier ${patient.prenom} ${patient.nom}` });
+};

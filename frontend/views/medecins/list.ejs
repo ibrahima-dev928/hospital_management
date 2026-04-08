@@ -4,6 +4,7 @@
       <%= success %>
     </div>
     <% } %>
+
       <div class="card">
         <h2>➕ Ajouter un médecin</h2>
         <form action="/medecins" method="POST">
@@ -20,21 +21,33 @@
           <button type="submit" class="btn-primary">Ajouter</button>
         </form>
       </div>
+
       <div class="card">
         <h2>📋 Liste des médecins (<%= medecins.length %>)</h2>
-        <table>
+        <table class="table">
           <thead>
             <tr>
+              <th>Photo</th>
               <th>ID</th>
               <th>Nom</th>
               <th>Prénom</th>
               <th>Spécialité</th>
               <th>Téléphone</th>
               <th>Actions</th>
+            </tr>
           </thead>
           <tbody>
             <% medecins.forEach(m=> { %>
               <tr>
+                <td style="text-align: center;">
+                  <% if (m.photo) { %>
+                    <img src="/<%= m.photo %>" width="50" height="50" style="object-fit:cover; border-radius:50%;">
+                    <% } else { %>
+                      <div
+                        style="width:50px; height:50px; background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                        📷</div>
+                      <% } %>
+                </td>
                 <td>#<%= m.id %>
                 </td>
                 <td>
@@ -55,9 +68,10 @@
                   <a href="/medecins/delete/<%= m.id %>" class="btn-danger"
                     onclick="return confirm('Supprimer ?')">🗑️</a>
                 </td>
-        </table>
-        <% }) %>
+              </tr>
+              <% }) %>
           </tbody>
-          </table>
+        </table>
       </div>
+
       <%- include('../partials/footer') %>

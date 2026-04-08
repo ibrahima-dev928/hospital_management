@@ -18,9 +18,10 @@
       </div>
       <div class="card">
         <h2>📋 Liste des patients (<%= patients.length %>)</h2>
-        <table>
+        <table class="table">
           <thead>
             <tr>
+              <th>Photo</th>
               <th>ID</th>
               <th>Nom</th>
               <th>Prénom</th>
@@ -31,6 +32,15 @@
           <tbody>
             <% patients.forEach(p=> { %>
               <tr>
+                <td>
+                  <% if (p.photo) { %>
+                    <img src="/<%= p.photo %>" width="50" height="50" style="object-fit:cover; border-radius:50%;">
+                    <% } else { %>
+                      <div
+                        style="width:50px; height:50px; background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                        📷</div>
+                      <% } %>
+                </td>
                 <td>#<%= p.id %>
                 </td>
                 <td>
