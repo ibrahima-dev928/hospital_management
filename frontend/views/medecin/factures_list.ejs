@@ -1,40 +1,42 @@
 <%- include('../partials/header', { title: 'Factures émises' , currentPath: '/medecin/factures' }) %>
   <div class="card">
     <h2>📋 Factures émises</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>N°</th>
-          <th>Patient</th>
-          <th>Date</th>
-          <th>Montant TTC</th>
-          <th>Statut</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% factures.forEach(f=> { %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
           <tr>
-            <td>
-              <%= f.numero_facture %>
-            </td>
-            <td>
-              <%= f.patient_prenom %>
-                <%= f.patient_nom %>
-            </td>
-            <td>
-              <%= new Date(f.date_emission).toLocaleDateString() %>
-            </td>
-            <td>
-              <%= parseFloat(f.total_ttc).toFixed(2) %> fcfa
-            </td>
-            <td>
-              <%= f.statut %>
-            </td>
-            <td><a href="/patient/facture/<%= f.id %>" class="btn-info">👁️ Voir</a></td>
+            <th>N°</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Montant TTC</th>
+            <th>Statut</th>
+            <th>Action</th>
           </tr>
-          <% }) %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% factures.forEach(f=> { %>
+            <tr>
+              <td>
+                <%= f.numero_facture %>
+              </td>
+              <td>
+                <%= f.patient_prenom %>
+                  <%= f.patient_nom %>
+              </td>
+              <td>
+                <%= new Date(f.date_emission).toLocaleDateString() %>
+              </td>
+              <td>
+                <%= parseFloat(f.total_ttc).toFixed(2) %> fcfa
+              </td>
+              <td>
+                <%= f.statut %>
+              </td>
+              <td><a href="/patient/facture/<%= f.id %>" class="btn-info">👁️ Voir</a></td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
   </div>
   <%- include('../partials/footer') %>

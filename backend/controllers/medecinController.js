@@ -23,7 +23,22 @@ exports.edit = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  await Medecin.create(req.body);
+  const newMedecin = {
+    nom: req.body.nom.toUpperCase(),
+    prenom: req.body.prenom,
+    specialite: req.body.specialite,
+    telephone: req.body.telephone,
+    email: req.body.email,
+    disponibilite: req.body.disponibilite,
+    photo: null,
+    user_id: null,
+    diplomes: req.body.diplomes,
+    annees_experience: req.body.annees_experience ? parseInt(req.body.annees_experience) : null,
+    numero_ordre: req.body.numero_ordre,
+    cabinet_adresse: req.body.cabinet_adresse,
+    cabinet_telephone: req.body.cabinet_telephone
+  };
+  await Medecin.create(newMedecin);
   res.redirect('/medecins?success=Médecin ajouté');
 };
 

@@ -1,0 +1,175 @@
+<%- include('../partials/header', { title: 'Résultats de recherche' , currentPath: '/admin/recherche' }) %>
+  <div class="card">
+    <h2>🔍 Résultats pour "<%= q %>"</h2>
+    <% if (type==='all' || type==='patient' ) { %>
+      <h3>👥 Patients</h3>
+      <% if (results.patients.length===0) { %>
+        <p>Aucun patient trouvé.</p>
+        <% } else { %>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Téléphone</th>
+                  <th>Chambre actuelle</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% results.patients.forEach(p=> { %>
+                  <tr>
+                    <td>
+                      <%= p.nom %>
+                    </td>
+                    <td>
+                      <%= p.prenom %>
+                    </td>
+                    <td>
+                      <%= p.telephone || '-' %>
+                    </td>
+                    <td>
+                      <%= p.chambre_numero ? `Chambre ${p.chambre_numero}` : 'Non admis' %>
+                    </td>
+                    <td><a href="/patients/view/<%= p.id %>" class="btn-info">👁️ Voir</a></td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } %>
+            <% } %>
+
+              <% if (type==='all' || type==='medecin' ) { %>
+                <h3>👨‍⚕️ Médecins</h3>
+                <% if (results.medecins.length===0) { %>
+                  <p>Aucun médecin trouvé.</p>
+                  <% } else { %>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Spécialité</th>
+                            <th>RDV à venir</th>
+                            <th>Disponibilité</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% results.medecins.forEach(m=> { %>
+                            <tr>
+                              <td>
+                                <%= m.nom %>
+                              </td>
+                              <td>
+                                <%= m.prenom %>
+                              </td>
+                              <td>
+                                <%= m.specialite %>
+                              </td>
+                              <td>
+                                <%= m.rdv_a_venir %>
+                              </td>
+                              <td>
+                                <%= m.disponibilite || 'Non renseignée' %>
+                              </td>
+                              <td><a href="/medecins/view/<%= m.id %>" class="btn-info">👁️ Voir</a></td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                      </table>
+                    </div>
+                    <% } %>
+                      <% } %>
+
+                        <% if (type==='all' || type==='chambre' ) { %>
+                          <h3>🛏️ Chambres disponibles</h3>
+                          <% if (results.chambres.length===0) { %>
+                            <p>Aucune chambre disponible trouvée.</p>
+                            <% } else { %>
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Bâtiment</th>
+                                      <th>Numéro</th>
+                                      <th>Type</th>
+                                      <th>Capacité</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% results.chambres.forEach(c=> { %>
+                                      <tr>
+                                        <td>
+                                          <%= c.batiment_nom %>
+                                        </td>
+                                        <td>
+                                          <%= c.numero %>
+                                        </td>
+                                        <td>
+                                          <%= c.type %>
+                                        </td>
+                                        <td>
+                                          <%= c.capacite %>
+                                        </td>
+                                        <td><a href="/admin/chambres/edit/<%= c.id %>" class="btn-info">✏️ Modifier</a>
+                                        </td>
+                                      </tr>
+                                      <% }) %>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <% } %>
+                                <% } %>
+
+                                  <% if (type==='all' || type==='admission' ) { %>
+                                    <h3>🏥 Admissions en cours</h3>
+                                    <% if (results.admissions.length===0) { %>
+                                      <p>Aucune admission en cours trouvée.</p>
+                                      <% } else { %>
+                                        <div class="table-responsive">
+                                          <table class="table">
+                                            <thead>
+                                              <tr>
+                                                <th>Patient</th>
+                                                <th>Chambre</th>
+                                                <th>Bâtiment</th>
+                                                <th>Admis le</th>
+                                                <th>Motif</th>
+                                                <th>Action</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <% results.admissions.forEach(a=> { %>
+                                                <tr>
+                                                  <td>
+                                                    <%= a.patient_prenom %>
+                                                      <%= a.patient_nom %>
+                                                  </td>
+                                                  <td>
+                                                    <%= a.numero %>
+                                                  </td>
+                                                  <td>
+                                                    <%= a.batiment_nom %>
+                                                  </td>
+                                                  <td>
+                                                    <%= new Date(a.date_admission).toLocaleString() %>
+                                                  </td>
+                                                  <td>
+                                                    <%= a.motif %>
+                                                  </td>
+                                                  <td><a href="/admin/admissions/<%= a.id %>" class="btn-info">👁️
+                                                      Voir</a></td>
+                                                </tr>
+                                                <% }) %>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <% } %>
+                                          <% } %>
+  </div>
+  <%- include('../partials/footer') %>

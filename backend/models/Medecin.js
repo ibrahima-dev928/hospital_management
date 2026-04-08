@@ -12,21 +12,33 @@ class Medecin {
   }
 
   static async create(data) {
-    const { nom, prenom, specialite, telephone, email, disponibilite, photo } = data;
+    const {
+      nom, prenom, specialite, telephone, email, disponibilite, photo, user_id,
+      diplomes, annees_experience, numero_ordre, cabinet_adresse, cabinet_telephone
+    } = data;
     const [res] = await db.query(
-      `INSERT INTO medecins (nom, prenom, specialite, telephone, email, disponibilite, photo)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [nom.toUpperCase(), prenom, specialite, telephone || null, email || null, disponibilite || null, photo || null]
+      `INSERT INTO medecins 
+        (nom, prenom, specialite, telephone, email, disponibilite, photo, user_id,
+         diplomes, annees_experience, numero_ordre, cabinet_adresse, cabinet_telephone)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [nom, prenom, specialite, telephone, email, disponibilite, photo, user_id,
+        diplomes, annees_experience, numero_ordre, cabinet_adresse, cabinet_telephone]
     );
     return res.insertId;
   }
 
   static async update(id, data) {
-    const { nom, prenom, specialite, telephone, email, disponibilite, photo } = data;
+    const {
+      nom, prenom, specialite, telephone, email, disponibilite, photo,
+      diplomes, annees_experience, numero_ordre, cabinet_adresse, cabinet_telephone
+    } = data;
     const [res] = await db.query(
-      `UPDATE medecins SET nom=?, prenom=?, specialite=?, telephone=?, email=?, disponibilite=?, photo=?
-             WHERE id=?`,
-      [nom.toUpperCase(), prenom, specialite, telephone || null, email || null, disponibilite || null, photo || null, id]
+      `UPDATE medecins SET 
+            nom=?, prenom=?, specialite=?, telephone=?, email=?, disponibilite=?, photo=?,
+            diplomes=?, annees_experience=?, numero_ordre=?, cabinet_adresse=?, cabinet_telephone=?
+         WHERE id=?`,
+      [nom, prenom, specialite, telephone, email, disponibilite, photo,
+        diplomes, annees_experience, numero_ordre, cabinet_adresse, cabinet_telephone, id]
     );
     return res.affectedRows;
   }

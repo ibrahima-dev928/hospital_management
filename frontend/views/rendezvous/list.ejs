@@ -48,46 +48,48 @@
 
       <div class="card">
         <h2>📋 Liste des rendez-vous (<%= rendezvous.length %>)</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Patient</th>
-              <th>Médecin</th>
-              <th>Date & Heure</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% rendezvous.forEach(rdv=> {
-              const patient = patients.find(p => p.id === rdv.patient_id);
-              const medecin = medecins.find(m => m.id === rdv.medecin_id);
-              %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
               <tr>
-                <td>#<%= rdv.id %>
-                </td>
-                <td>
-                  <%= patient ? `${patient.prenom} ${patient.nom}` : '?' %>
-                </td>
-                <td>
-                  <%= medecin ? `Dr. ${medecin.prenom} ${medecin.nom}` : '?' %>
-                </td>
-                <td>
-                  <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
-                </td>
-                <td>
-                  <%= rdv.statut %>
-                </td>
-                <td>
-                  <a href="/rendezvous/view/<%= rdv.id %>" class="btn-info">👁️</a>
-                  <a href="/rendezvous/edit/<%= rdv.id %>" class="btn-edit">✏️</a>
-                  <a href="/rendezvous/delete/<%= rdv.id %>" class="btn-danger"
-                    onclick="return confirm('Supprimer ce rendez-vous ?')">🗑️</a>
-                </td>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Médecin</th>
+                <th>Date & Heure</th>
+                <th>Statut</th>
+                <th>Actions</th>
               </tr>
-              <% }) %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% rendezvous.forEach(rdv=> {
+                const patient = patients.find(p => p.id === rdv.patient_id);
+                const medecin = medecins.find(m => m.id === rdv.medecin_id);
+                %>
+                <tr>
+                  <td>#<%= rdv.id %>
+                  </td>
+                  <td>
+                    <%= patient ? `${patient.prenom} ${patient.nom}` : '?' %>
+                  </td>
+                  <td>
+                    <%= medecin ? `Dr. ${medecin.prenom} ${medecin.nom}` : '?' %>
+                  </td>
+                  <td>
+                    <%= new Date(rdv.date_rdv).toLocaleString('fr-FR') %>
+                  </td>
+                  <td>
+                    <%= rdv.statut %>
+                  </td>
+                  <td>
+                    <a href="/rendezvous/view/<%= rdv.id %>" class="btn-info">👁️</a>
+                    <a href="/rendezvous/edit/<%= rdv.id %>" class="btn-edit">✏️</a>
+                    <a href="/rendezvous/delete/<%= rdv.id %>" class="btn-danger"
+                      onclick="return confirm('Supprimer ce rendez-vous ?')">🗑️</a>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
       </div>
       <%- include('../partials/footer') %>

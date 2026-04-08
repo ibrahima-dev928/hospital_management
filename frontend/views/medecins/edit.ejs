@@ -14,6 +14,30 @@
         <input type="email" name="email" value="<%= medecin.email || '' %>">
         <input type="text" name="disponibilite" value="<%= medecin.disponibilite || '' %>">
       </div>
+
+      <!-- Bloc Informations professionnelles -->
+      <h3>Informations professionnelles</h3>
+      <div class="form-group">
+        <label>Diplômes / Formations</label>
+        <textarea name="diplomes" rows="2"><%= medecin.diplomes || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>Années d'expérience</label>
+        <input type="number" name="annees_experience" value="<%= medecin.annees_experience || '' %>">
+      </div>
+      <div class="form-group">
+        <label>Numéro d'ordre (Ordre des médecins)</label>
+        <input type="text" name="numero_ordre" value="<%= medecin.numero_ordre || '' %>">
+      </div>
+      <div class="form-group">
+        <label>Adresse du cabinet</label>
+        <textarea name="cabinet_adresse" rows="2"><%= medecin.cabinet_adresse || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>Téléphone du cabinet</label>
+        <input type="text" name="cabinet_telephone" value="<%= medecin.cabinet_telephone || '' %>">
+      </div>
+
       <button type="submit" class="btn-primary">💾 Enregistrer</button>
       <a href="/medecins/view/<%= medecin.id %>" class="btn-secondary">Annuler</a>
     </form>

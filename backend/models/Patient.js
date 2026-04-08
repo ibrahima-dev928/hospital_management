@@ -10,18 +10,39 @@ class Patient {
     return rows[0];
   }
   static async create(data) {
-    const { nom, prenom, date_naissance, genre, telephone, email, adresse, photo } = data;
+    const {
+      nom, prenom, date_naissance, genre, telephone, email, adresse, photo, user_id,
+      groupe_sanguin, allergies, antecedents, traitements_en_cours, medecin_traitant_id,
+      profession, situation_familiale, numero_securite_sociale
+    } = data;
     const [res] = await db.query(
-      'INSERT INTO patients (nom, prenom, date_naissance, genre, telephone, email, adresse, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [nom.toUpperCase(), prenom, date_naissance, genre, telephone, email, adresse, photo || null]
+      `INSERT INTO patients 
+        (nom, prenom, date_naissance, genre, telephone, email, adresse, photo, user_id,
+         groupe_sanguin, allergies, antecedents, traitements_en_cours, medecin_traitant_id,
+         profession, situation_familiale, numero_securite_sociale)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [nom, prenom, date_naissance, genre, telephone, email, adresse, photo, user_id,
+        groupe_sanguin, allergies, antecedents, traitements_en_cours, medecin_traitant_id,
+        profession, situation_familiale, numero_securite_sociale]
     );
     return res.insertId;
   }
+
   static async update(id, data) {
-    const { nom, prenom, date_naissance, genre, telephone, email, adresse, photo } = data;
+    const {
+      nom, prenom, date_naissance, genre, telephone, email, adresse, photo,
+      groupe_sanguin, allergies, antecedents, traitements_en_cours, medecin_traitant_id,
+      profession, situation_familiale, numero_securite_sociale
+    } = data;
     const [res] = await db.query(
-      'UPDATE patients SET nom=?, prenom=?, date_naissance=?, genre=?, telephone=?, email=?, adresse=?, photo=? WHERE id=?',
-      [nom.toUpperCase(), prenom, date_naissance, genre, telephone, email, adresse, photo || null, id]
+      `UPDATE patients SET 
+            nom=?, prenom=?, date_naissance=?, genre=?, telephone=?, email=?, adresse=?, photo=?,
+            groupe_sanguin=?, allergies=?, antecedents=?, traitements_en_cours=?, medecin_traitant_id=?,
+            profession=?, situation_familiale=?, numero_securite_sociale=?
+         WHERE id=?`,
+      [nom, prenom, date_naissance, genre, telephone, email, adresse, photo,
+        groupe_sanguin, allergies, antecedents, traitements_en_cours, medecin_traitant_id,
+        profession, situation_familiale, numero_securite_sociale, id]
     );
     return res.affectedRows;
   }

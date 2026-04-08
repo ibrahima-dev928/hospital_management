@@ -89,3 +89,4 @@ app.get('/test-db', async (req, res) => {
 
 app.use('/admin/batiments', require('./routes/admin/batiments'));
 app.use('/admin/chambres', require('./routes/admin/chambres'));
+app.use('/admin/recherche', require('./routes/admin/recherche'));

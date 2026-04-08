@@ -1,6 +1,7 @@
 const Patient = require('../models/Patient');
 const Rendezvous = require('../models/Rendezvous');
 const fs = require('fs').promises;
+const Medecin = require('../models/Medecin');
 
 exports.list = async (req, res) => {
   const patients = await Patient.findAll();
@@ -16,7 +17,27 @@ exports.view = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  await Patient.create(req.body);
+  const newPatient = {
+    nom: req.body.nom.toUpperCase(),
+    prenom: req.body.prenom,
+    date_naissance: req.body.date_naissance,
+    genre: req.body.genre,
+    telephone: req.body.telephone,
+    email: req.body.email,
+    adresse: req.body.adresse,
+    photo: null,
+    user_id: null,
+    // Nouveaux champs
+    groupe_sanguin: req.body.groupe_sanguin,
+    allergies: req.body.allergies,
+    antecedents: req.body.antecedents,
+    traitements_en_cours: req.body.traitements_en_cours,
+    medecin_traitant_id: req.body.medecin_traitant_id ? parseInt(req.body.medecin_traitant_id) : null,
+    profession: req.body.profession,
+    situation_familiale: req.body.situation_familiale,
+    numero_securite_sociale: req.body.numero_securite_sociale
+  };
+  await Patient.create(newPatient);
   res.redirect('/patients?success=Patient ajouté');
 };
 
@@ -48,5 +69,6 @@ exports.edit = async (req, res) => {
   const id = parseInt(req.params.id);
   const patient = await Patient.findById(id);
   if (!patient) return res.redirect('/patients?error=Patient introuvable');
-  res.render('patients/edit', { patient, title: `Modifier ${patient.prenom} ${patient.nom}` });
+  const medecins = await Medecin.findAll(); // Import Medecin en haut du fichier
+  res.render('patients/edit', { patient, medecins, title: `Modifier ${patient.prenom} ${patient.nom}` });
 };

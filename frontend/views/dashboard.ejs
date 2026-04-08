@@ -196,6 +196,24 @@
       </div>
 
       <% } else if (user.role==='admin' ) { %>
+        <!-- Barre de recherche avancée (admin uniquement) -->
+        <div class="card">
+          <h2>🔍 Recherche globale</h2>
+          <form action="/admin/recherche" method="GET">
+            <div class="form-row">
+              <input type="text" name="q" placeholder="Nom du patient, médecin, chambre..." style="flex: 2;">
+              <select name="type" style="flex: 1;">
+                <option value="all">Tous</option>
+                <option value="patient">Patients</option>
+                <option value="medecin">Médecins</option>
+                <option value="chambre">Chambres disponibles</option>
+                <option value="admission">Admissions en cours</option>
+              </select>
+              <button type="submit" class="btn-primary">🔍 Rechercher</button>
+            </div>
+          </form>
+        </div>
+
         <!-- Dashboard admin enrichi -->
         <div class="stats-grid">
           <div class="stat-card">

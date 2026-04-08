@@ -1,47 +1,49 @@
 <%- include('../partials/header', { title: 'Mes factures' , currentPath: '/patient/factures' }) %>
   <div class="card">
     <h2>🧾 Historique des factures</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>N° facture</th>
-          <th>Date</th>
-          <th>Montant TTC</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% factures.forEach(f=> { %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
           <tr>
-            <td>
-              <%= f.numero_facture %>
-            </td>
-            <td>
-              <%= new Date(f.date_emission).toLocaleDateString() %>
-            </td>
-            <td>
-              <%= Number(f.total_ttc).toFixed(2) %> €
-            </td>
-            <td>
-              <% if (f.statut==='payee' ) { %>
-                <span style="color:green;">Payée</span>
-                <% } else if (f.statut==='annulee' ) { %>
-                  <span style="color:red;">Annulée</span>
-                  <% } else { %>
-                    <span style="color:orange;">Impayée</span>
-                    <% } %>
-            </td>
-            <td>
-              <a href="/patient/facture/<%= f.id %>" class="btn-info">👁️ Détail</a>
-              <% if (f.statut==='impayee' ) { %>
-                <a href="/patient/facture/payer/<%= f.id %>" class="btn-primary"
-                  onclick="return confirm('Confirmer le paiement ?')">💳 Payer</a>
-                <% } %>
-            </td>
+            <th>N° facture</th>
+            <th>Date</th>
+            <th>Montant TTC</th>
+            <th>Statut</th>
+            <th>Actions</th>
           </tr>
-          <% }) %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% factures.forEach(f=> { %>
+            <tr>
+              <td>
+                <%= f.numero_facture %>
+              </td>
+              <td>
+                <%= new Date(f.date_emission).toLocaleDateString() %>
+              </td>
+              <td>
+                <%= Number(f.total_ttc).toFixed(2) %> €
+              </td>
+              <td>
+                <% if (f.statut==='payee' ) { %>
+                  <span style="color:green;">Payée</span>
+                  <% } else if (f.statut==='annulee' ) { %>
+                    <span style="color:red;">Annulée</span>
+                    <% } else { %>
+                      <span style="color:orange;">Impayée</span>
+                      <% } %>
+              </td>
+              <td>
+                <a href="/patient/facture/<%= f.id %>" class="btn-info">👁️ Détail</a>
+                <% if (f.statut==='impayee' ) { %>
+                  <a href="/patient/facture/payer/<%= f.id %>" class="btn-primary"
+                    onclick="return confirm('Confirmer le paiement ?')">💳 Payer</a>
+                  <% } %>
+              </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
   </div>
   <%- include('../partials/footer') %>

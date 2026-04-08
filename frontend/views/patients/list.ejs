@@ -4,63 +4,108 @@
       <%= success %>
     </div>
     <% } %>
+
+      <!-- Formulaire d'ajout -->
       <div class="card">
         <h2>➕ Ajouter un patient</h2>
         <form action="/patients" method="POST">
           <div class="form-row">
             <input type="text" name="nom" placeholder="Nom" required>
             <input type="text" name="prenom" placeholder="Prénom" required>
-            <input type="text" name="telephone" placeholder="Téléphone">
+            <input type="tel" name="telephone" placeholder="Téléphone">
             <input type="email" name="email" placeholder="Email">
-            <button type="submit" class="btn-primary">Ajouter</button>
           </div>
+          <div class="form-row">
+            <input type="date" name="date_naissance" placeholder="Date de naissance">
+            <select name="genre">
+              <option value="">Genre</option>
+              <option value="M">Masculin</option>
+              <option value="F">Féminin</option>
+            </select>
+            <input type="text" name="adresse" placeholder="Adresse">
+          </div>
+
+          <h3>Informations médicales</h3>
+          <div class="form-row">
+            <select name="groupe_sanguin">
+              <option value="">Groupe sanguin</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+            <input type="text" name="profession" placeholder="Profession">
+            <input type="text" name="situation_familiale" placeholder="Situation familiale">
+          </div>
+          <div class="form-group">
+            <textarea name="allergies" rows="2" placeholder="Allergies"></textarea>
+          </div>
+          <div class="form-group">
+            <textarea name="antecedents" rows="2" placeholder="Antécédents médicaux"></textarea>
+          </div>
+          <div class="form-group">
+            <textarea name="traitements_en_cours" rows="2" placeholder="Traitements en cours"></textarea>
+          </div>
+          <div class="form-group">
+            <input type="text" name="numero_securite_sociale" placeholder="Numéro de sécurité sociale">
+          </div>
+          <button type="submit" class="btn-primary">Ajouter</button>
         </form>
       </div>
+
+      <!-- Liste des patients avec table responsive -->
       <div class="card">
         <h2>📋 Liste des patients (<%= patients.length %>)</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Photo</th>
-              <th>ID</th>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Téléphone</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% patients.forEach(p=> { %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
               <tr>
-                <td>
-                  <% if (p.photo) { %>
-                    <img src="/<%= p.photo %>" width="50" height="50" style="object-fit:cover; border-radius:50%;">
-                    <% } else { %>
-                      <div
-                        style="width:50px; height:50px; background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                        📷</div>
-                      <% } %>
-                </td>
-                <td>#<%= p.id %>
-                </td>
-                <td>
-                  <%= p.nom %>
-                </td>
-                <td>
-                  <%= p.prenom %>
-                </td>
-                <td>
-                  <%= p.telephone || '-' %>
-                </td>
-                <td>
-                  <a href="/patients/view/<%= p.id %>" class="btn-info">👁️</a>
-                  <a href="/patients/edit/<%= p.id %>" class="btn-edit">✏️</a>
-                  <a href="/patients/delete/<%= p.id %>" class="btn-danger"
-                    onclick="return confirm('Supprimer ?')">🗑️</a>
-                </td>
+                <th>Photo</th>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Actions</th>
               </tr>
-              <% }) %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% patients.forEach(p=> { %>
+                <tr>
+                  <td>
+                    <% if (p.photo) { %>
+                      <img src="/<%= p.photo %>" width="50" height="50" style="object-fit:cover; border-radius:50%;">
+                      <% } else { %>
+                        <div
+                          style="width:50px; height:50px; background:#ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                          📷</div>
+                        <% } %>
+                  </td>
+                  <td>#<%= p.id %>
+                  </td>
+                  <td>
+                    <%= p.nom %>
+                  </td>
+                  <td>
+                    <%= p.prenom %>
+                  </td>
+                  <td>
+                    <%= p.telephone || '-' %>
+                  </td>
+                  <td>
+                    <a href="/patients/view/<%= p.id %>" class="btn-info">👁️</a>
+                    <a href="/patients/edit/<%= p.id %>" class="btn-edit">✏️</a>
+                    <a href="/patients/delete/<%= p.id %>" class="btn-danger"
+                      onclick="return confirm('Supprimer ?')">🗑️</a>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <%- include('../partials/footer') %>

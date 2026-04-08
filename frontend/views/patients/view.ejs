@@ -37,7 +37,39 @@
         </p>
       </div>
     </div>
+
+    <!-- Bloc Informations médicales et sociales -->
+    <div style="margin-top: 30px;">
+      <h3>Informations médicales</h3>
+      <p><strong>Groupe sanguin :</strong>
+        <%= patient.groupe_sanguin || 'Non renseigné' %>
+      </p>
+      <p><strong>Allergies :</strong>
+        <%= patient.allergies || 'Aucune' %>
+      </p>
+      <p><strong>Antécédents :</strong>
+        <%= patient.antecedents || 'Aucun' %>
+      </p>
+      <p><strong>Traitements en cours :</strong>
+        <%= patient.traitements_en_cours || 'Aucun' %>
+      </p>
+      <p><strong>Médecin traitant :</strong>
+        <% if (patient.medecin_traitant_id) { %>
+          <a href="/medecins/view/<%= patient.medecin_traitant_id %>">Voir le médecin</a>
+          <% } else { %> Aucun <% } %>
+      </p>
+      <p><strong>Profession :</strong>
+        <%= patient.profession || 'Non renseignée' %>
+      </p>
+      <p><strong>Situation familiale :</strong>
+        <%= patient.situation_familiale || 'Non renseignée' %>
+      </p>
+      <p><strong>N° Sécurité sociale :</strong>
+        <%= patient.numero_securite_sociale || 'Non renseigné' %>
+      </p>
+    </div>
   </div>
+
   <script>
     async function openCamera() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
